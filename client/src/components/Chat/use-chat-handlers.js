@@ -15,7 +15,10 @@ const useChatHandlers = (/** @type {import("../../state").UserEntry} */ user) =>
   const roomId = room?.id;
   const messages = room?.messages;
 
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState({
+    'message': '',
+    'attachment': null
+  });
 
   const scrollToTop = useCallback(() => {
     setTimeout(() => {

@@ -1,16 +1,29 @@
+
 // @ts-check
-const TypingArea = ({ message, setMessage, onSubmit }) => (
+const TypingArea = ({ message, setMessage, onSubmit, onFileOpened }) => (
   <div className="p-3 chat-input-section">
     <form className="row" onSubmit={onSubmit}>
       <div className="col">
         <div className="position-relative">
-          <input
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            type="text"
-            placeholder="Enter Message..."
-            className="form-control chat-input"
-          />
+          <div style={{ 
+            display: 'flex',
+            flexDirection: 'row'
+          }}>
+            <input
+              value={message.message}
+              onChange={(e) => {
+                console.log("message: ", message);
+                setMessage({ ...message, 'message': e.target.value  })
+              }}
+              type="text"
+              placeholder="Enter Message..."
+              className="form-control chat-input"
+            />
+            <input type="file" name="file" id="file" onChange={onFileOpened} />
+            <span class="material-symbols-outlined">
+              attach_file
+            </span>
+          </div>
           {/**/}
         </div>
       </div>

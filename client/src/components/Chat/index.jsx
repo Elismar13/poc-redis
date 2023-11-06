@@ -8,7 +8,7 @@ import useChatHandlers from "./use-chat-handlers";
 /**
  * @param {{
  *  onLogOut: () => void,
- *  onMessageSend: (message: string, roomId: string) => void,
+ *  onMessageSend: (message: Object, roomId: string) => void,
  *  user: import("../../state").UserEntry
  * }} props
  */
@@ -61,11 +61,15 @@ export default function Chat({ onLogOut, user, onMessageSend }) {
             setMessage={setMessage}
             onSubmit={(e) => {
               e.preventDefault();
-              onMessageSend(message.trim(), roomId);
-              setMessage("");
+              onMessageSend(message, roomId);
 
-              messageListElement.current.scrollTop =
-                messageListElement.current.scrollHeight;
+              messageListElement.current.scrollTop = messageListElement.current.scrollHeight;
+            }}
+            onFileOpened={(e) => {
+              e.preventDefault();
+              const file = e.target.files[0];
+              
+              setMessage({ ...message, 'attachment': file })
             }}
           />
         </div>

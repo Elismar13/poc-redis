@@ -134,7 +134,7 @@ const useAppHandlers = () => {
 
   const onMessageSend = useCallback(
     (message, roomId) => {
-      if (typeof message !== "string" || message.trim().length === 0) {
+      if (message.message.trim().length === 0) {
         return;
       }
       if (!socket) {
