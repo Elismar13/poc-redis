@@ -157,13 +157,14 @@ async function runApp() {
        * @param {{
        *  from: string
        *  date: number
-       *  message: string
+       *  message: object
        *  roomId: string
        * }} message
        **/
       async (message) => {
         /** Make sure nothing illegal is sent here. */
-        message = { ...message, message: sanitise(message.message) };
+        console.log("Mensagem recebida: ", message)
+        message = { ...message, message: sanitise(message.message.message) };
         /**
          * The user might be set as offline if he tried to access the chat from another tab, pinging by message
          * resets the user online status

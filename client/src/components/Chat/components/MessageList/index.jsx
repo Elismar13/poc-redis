@@ -55,6 +55,7 @@ const MessageList = ({
             <></>
           )}
           {messages.map((message, x) => {
+            console.log(message);
             const key = message.message + message.date + message.from + x;
             if (message.from === "info") {
               return <InfoMessage key={key} message={message.message} />;

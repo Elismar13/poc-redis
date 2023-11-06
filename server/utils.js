@@ -96,9 +96,9 @@ const getMessages = async (roomId = "0", offset = 0, size = 50) => {
 const sanitise = (text) => {
   let sanitisedText = text;
 
-  if (text.indexOf('<') > -1 || text.indexOf('>') > -1) {
-    sanitisedText = text.replace(/</g, '&lt').replace(/>/g, '&gt');
-  }
+  // if (text.indexOf('<') > -1 || text.indexOf('>') > -1) {
+  //   sanitisedText = text.replace(/</g, '&lt').replace(/>/g, '&gt');
+  // }
 
   return sanitisedText;
 };
