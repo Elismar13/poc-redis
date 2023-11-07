@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const { incr, set, hmset, sadd, hmget, exists,
   client: redisClient,
 } = require('./redis');
+const { User } = require('./model/User');
 
 /** Redis key for the username (for getting the user id) */
 const makeUsernameKey = (username) => {
@@ -23,6 +24,8 @@ const createUser = async (username, password) => {
   const userKey = `user:${nextId}`;
   await set(usernameKey, userKey);
   await hmset(userKey, ["username", username, "password", hashedPassword]);
+
+  await User.create({ username, password: hashedPassword, role: '1' });
 
   /**
    * Each user has a set of rooms he is in

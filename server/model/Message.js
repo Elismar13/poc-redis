@@ -1,17 +1,19 @@
-const { Sequelize, DataTypes } = require('sequelize');
 const { sequelize } = require('./sequelize');
 
-const User = sequelize.define('User', {
-  username: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-  },
-  password: {
+const Message = sequelize.define('Message', {
+  from: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  role: {
+  date: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
+  message: {
+    type: DataTypes.TEXT,
+    allowNull: false,
+  },
+  roomId: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -22,5 +24,5 @@ sequelize.sync().then(() => {
 });
 
 module.exports = {
-  User,
+  Message,
 }
