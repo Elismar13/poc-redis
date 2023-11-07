@@ -5,18 +5,17 @@ import Logo from "../Logo";
 import "./style.css";
 import { useEffect } from "react";
 
-const DEMO_USERS = ["Pablo", "Joe", "Mary", "Alex"];
+const USER_ROLES = ["Consultor", "Cliente"];
 
 export default function Login({ onLogIn }) {
-  const [username, setUsername] = useState(
-    () => DEMO_USERS[Math.floor(Math.random() * DEMO_USERS.length)]
-  );
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState("password123");
+  const [role, setRole] = useState("0");
   const [error, setError] = useState(null);
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    onLogIn(username, password, setError);
+    onLogIn(username, password, role, setError);
   };
 
   return (
@@ -78,18 +77,21 @@ export default function Login({ onLogIn }) {
             }}
             onSubmit={onSubmit}
           >
-            <label className="font-size-12">Name</label>
-
-            <div className="username-select mb-3">
-              <UsernameSelect
-                username={username}
-                setUsername={setUsername}
-                names={DEMO_USERS}
-              />
-            </div>
-
+            <label htmlFor="username" className="font-size-12">
+              Usuário
+            </label>
+            <input
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
+              type="text"
+              id="username"
+              className="form-control"
+              placeholder="Nome de usuário"
+              required
+            />
+            
             <label htmlFor="inputPassword" className="font-size-12">
-              Password
+              Senha
             </label>
             <input
               value={password}
@@ -97,9 +99,20 @@ export default function Login({ onLogIn }) {
               type="password"
               id="inputPassword"
               className="form-control"
-              placeholder="Password"
+              placeholder="Senha"
               required
             />
+
+            <label className="font-size-12">Função</label>
+
+            <div className="username-select mb-3">
+              <UsernameSelect
+                username={role}
+                setUsername={setRole}
+                names={USER_ROLES}
+              />
+            </div>
+
             <div style={{ height: 30 }} />
             <button className="btn btn-lg btn-primary btn-block" type="submit">
               Sign in
@@ -133,7 +146,7 @@ export default function Login({ onLogIn }) {
   );
 }
 
-const UsernameSelect = ({ username, setUsername, names = [""] }) => {
+const UsernameSelect = ({ username, setUsername, names = [] }) => {
   const [open, setOpen] = useState(false);
   const [width, setWidth] = useState(0);
   const ref = useRef();

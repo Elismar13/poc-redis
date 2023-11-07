@@ -15,10 +15,11 @@ export const getMe = () => {
 };
 
 /** Handle user log in */
-export const login = (username, password) => {
+export const login = (username, password, role) => {
   return axios.post(url('/login'), {
     username,
-    password
+    password,
+    role,
   }).then(x =>
     x.data
   )

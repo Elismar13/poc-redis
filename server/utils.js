@@ -16,7 +16,7 @@ const makeUsernameKey = (username) => {
  * @param {string} username 
  * @param {string} password 
  */
-const createUser = async (username, password) => {
+const createUser = async (username, password, role) => {
   const usernameKey = makeUsernameKey(username);
   /** Create user */
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -25,7 +25,7 @@ const createUser = async (username, password) => {
   await set(usernameKey, userKey);
   await hmset(userKey, ["username", username, "password", hashedPassword]);
 
-  await User.create({ username, password: hashedPassword, role: '1' });
+  await User.create({ username, password: hashedPassword, role });
 
   /**
    * Each user has a set of rooms he is in

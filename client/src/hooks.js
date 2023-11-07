@@ -105,12 +105,13 @@ const useUser = (onUserLoaded = (user) => { }, dispatch) => {
   const onLogIn = (
     username = "",
     password = "",
+    role = "",
     onError = (val = null) => { },
     onLoading = (loading = false) => { }
   ) => {
     onError(null);
     onLoading(true);
-    login(username, password)
+    login(username, password, role)
       .then((x) => {
         setUser(x);
       })
