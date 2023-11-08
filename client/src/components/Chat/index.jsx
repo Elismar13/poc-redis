@@ -71,8 +71,9 @@ export default function Chat({ onLogOut, user, onMessageSend }) {
                 onFileOpened={(e) => {
                   e.preventDefault();
                   const file = e.target.files[0];
+                  const fileName = file.name;
                   
-                  setMessage({ ...message, 'attachment': file })
+                  setMessage({ ...message, 'attachment': { file, fileName } })
                 }}
               />
             </div>

@@ -91,6 +91,7 @@ const useLastMessage = (
           if (messages.length !== 0) {
             message = messages.pop();
           }
+
           dispatch({
             type: "set last message",
             payload: { id: room.id, lastMessage: message },

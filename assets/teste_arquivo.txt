@@ -1,0 +1,11 @@
+Criar container redis com persistencia: 
+	docker run --name redis-container -d -p 6379:6379 redis redis-server --save 60 1 --loglevel warning 
+
+Rodar o cli:
+	docker ps -l
+	docker exec -it dd119c5ff626 redis-cli
+	// where af42f02a848f is the id of the container.
+
+
+	
+docker run --name redis-container -d redis redis-server --save 60 1 --loglevel warning

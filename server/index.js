@@ -165,15 +165,17 @@ async function runApp() {
        **/
       async (message) => {
         /** Make sure nothing illegal is sent here. */
-        console.log("Mensagem recebida: ", message)
+        const attachment = message.message.attachment;
         message = { ...message, message: sanitise(message.message.message) };
+        // message = message.message;
+
         /**
          * The user might be set as offline if he tried to access the chat from another tab, pinging by message
          * resets the user online status
          */
         await sadd("online_users", message.from);
         /** We've got a new message. Store it in db, then send back to the room. */
-        const messageString = JSON.stringify(message);
+        const messageString = JSON.stringify(messages);
         const roomKey = `room:${message.roomId}`;
 
         /**
@@ -186,8 +188,16 @@ async function runApp() {
         /**
          * Saving file
          */
-
-        const FILE_PATH = `assets/${}`
+        console.log("Arquivo recebido: ", attachment)
+        if(attachment != null) {
+          const FILE_PATH = `assets/${attachment.fileName}`
+          console.log(`Salvando arquivo de nome: ${attachment.fileName}`)
+          try {
+            await fs.writeFile(FILE_PATH, attachment.file, { flag: 'wx' });
+          } catch (error) {
+            console.log(`Arquivo ${attachment.fileName} já existe.`)
+          }
+        }
 
         if (isPrivate && !roomHasMessages) {
           const ids = message.roomId.split(":");
@@ -201,6 +211,8 @@ async function runApp() {
           publish("show.room", msg);
           socket.broadcast.emit(`show.room`, msg);
         }
+        console.log("Mensagens enviadas ao socket: ", message, messageString);
+
         await zadd(roomKey, "" + message.date, messageString);
         publish("message", message);
         io.to(roomKey).emit("message", message);
@@ -300,6 +312,7 @@ async function runApp() {
     const size = +req.query.size;
     try {
       const messages = await getMessages(roomId, offset, size);
+      console.log("Mensagens enviadas: ", messages)
       return res.status(200).send(messages);
     } catch (err) {
       return res.status(400).send(err);

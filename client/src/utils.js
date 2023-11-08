@@ -51,15 +51,19 @@ export const getAvatar = (username) => {
 export const populateUsersFromLoadedMessages = async (users, dispatch, messages) => {
   const userIds = {};
   messages.forEach((message) => {
-    userIds[message.from] = 1;
+    if(message.from !== undefined)
+      userIds[message.from] = 1;
   });
 
+  console.log('Users id: ', userIds)
+
   const ids = Object.keys(userIds).filter(
-    (id) => users[id] === undefined
+    (id) => users[id] === undefined || users[id] === 'undefined'
   );
 
-  if (ids.length !== 0) {
+  if (ids.length !== 0 && ids[0] !== undefined) {
     /** We need to fetch users first */
+    console.log("Populando algo ae, IDS: ", ids)
     const newUsers = await getUsers(ids);
     dispatch({
       type: "append users",
