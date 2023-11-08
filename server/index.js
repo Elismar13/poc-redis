@@ -3,6 +3,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const session = require("express-session");
 const bodyParser = require("body-parser");
+const cors = require('cors');
 /** @ts-ignore */
 const randomName = require("node-random-name");
 let RedisStore = require("connect-redis")(session);
@@ -115,6 +116,7 @@ async function runApp() {
     .then((x) => JSON.parse(x.toString()));
 
   app.use(bodyParser.json());
+  app.use(cors());
   app.use("/", express.static(path.dirname(__dirname) + "/client/build"));
 
   initPubSub();
@@ -173,12 +175,20 @@ async function runApp() {
         /** We've got a new message. Store it in db, then send back to the room. */
         const messageString = JSON.stringify(message);
         const roomKey = `room:${message.roomId}`;
+
         /**
          * It may be possible that the room is private and new, so it won't be shown on the other
          * user's screen, check if the roomKey exist. If not then broadcast message that the room is appeared
          */
         const isPrivate = !(await exists(`${roomKey}:name`));
         const roomHasMessages = await exists(roomKey);
+
+        /**
+         * Saving file
+         */
+
+        const FILE_PATH = `assets/${}`
+
         if (isPrivate && !roomHasMessages) {
           const ids = message.roomId.split(":");
           const msg = {
@@ -226,11 +236,12 @@ async function runApp() {
 
   /** Login/register login */
   app.post("/login", async (req, res) => {
-    const { username, password } = req.body;
+    const { username, password, role } = req.body;
     const usernameKey = makeUsernameKey(username);
     const userExists = await exists(usernameKey);
+
     if (!userExists) {
-      const newUser = await createUser(username, password);
+      const newUser = await createUser(username, password, role);
       /** @ts-ignore */
       req.session.user = newUser;
       return res.status(201).json(newUser);
@@ -257,12 +268,13 @@ async function runApp() {
    * Create a private room and add users to it
    */
   app.post("/room", auth, async (req, res) => {
-    const { user1, user2 } = {
+    const { user1, user2, service_order } = {
       user1: parseInt(req.body.user1),
       user2: parseInt(req.body.user2),
+      service_order: req.body.service_order
     };
 
-    const [result, hasError] = await createPrivateRoom(user1, user2);
+    const [result, hasError] = await createPrivateRoom(user1, user2, service_order);
     if (hasError) {
       return res.sendStatus(400);
     }
@@ -298,13 +310,16 @@ async function runApp() {
   app.get(`/users/online`, auth, async (req, res) => {
     const onlineIds = await smembers(`online_users`);
     const users = {};
+
     for (let onlineId of onlineIds) {
       const user = await hgetall(`user:${onlineId}`);
-      users[onlineId] = {
-        id: onlineId,
-        username: user.username,
-        online: true,
-      };
+      if(user != null) {
+        users[onlineId] = {
+          id: onlineId,
+          username: user.username,
+          online: true,
+        };
+      }
     }
     return res.send(users);
   });
@@ -339,6 +354,7 @@ async function runApp() {
     const userId = req.params.userId;
     /** We got the room ids */
     const roomIds = await smembers(`user:${userId}:rooms`);
+    console.log("Salas que o usuário está: ", roomIds);
     const rooms = [];
     for (let x = 0; x < roomIds.length; x++) {
       const roomId = roomIds[x];
@@ -352,13 +368,14 @@ async function runApp() {
          */
         const roomExists = await exists(`room:${roomId}`);
         if (!roomExists) {
+          rooms.push({ id: roomId, names: [roomId] })
           continue;
         }
 
         const userIds = roomId.split(":");
-        if (userIds.length !== 2) {
-          return res.sendStatus(400);
-        }
+        // if (userIds.length !== 2) {
+        //   return res.sendStatus(400);
+        // }
         rooms.push({
           id: roomId,
           names: [

@@ -53,8 +53,9 @@ const getPrivateRoomId = (user1, user2) => {
  *  names: any[];
  * }, boolean]>}
  */
-const createPrivateRoom = async (user1, user2) => {
-  const roomId = getPrivateRoomId(user1, user2);
+const createPrivateRoom = async (user1, user2, service_order) => {
+  // const roomId = getPrivateRoomId(user1, user2);
+  const roomId = service_order;
 
   if (roomId === null) {
     return [null, true];

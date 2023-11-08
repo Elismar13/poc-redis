@@ -108,6 +108,7 @@ const useAppHandlers = () => {
 
   /** Populate default rooms when user is not null */
   useEffect(() => {
+    console.log("Deveria entrar aqui: ", state.rooms, user)
     if (Object.values(state.rooms).length === 0 && user !== null) {
       /** First of all fetch online users. */
       getOnlineUsers().then((users) => {

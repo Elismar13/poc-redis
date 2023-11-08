@@ -30,50 +30,62 @@ export default function Chat({ onLogOut, user, onMessageSend }) {
 
   return (
     <div className="container py-5 px-4">
-      <div className="chat-body row overflow-hidden shadow bg-light rounded">
-        <div className="col-4 px-0">
-          <ChatList
-            user={user}
-            onLogOut={onLogOut}
-            rooms={rooms}
-            currentRoom={currentRoom}
-            dispatch={dispatch}
-          />
-        </div>
-        {/* Chat Box*/}
-        <div className="col-8 px-0 flex-column bg-white rounded-lg">
-          <div className="px-4 py-4" style={{ borderBottom: "1px solid #eee" }}>
-            <h2 className="font-size-15 mb-0">{room ? room.name : "Room"}</h2>
+      {
+        Object.values(rooms).length > 0 ? 
+        (
+          <div className="chat-body row overflow-hidden shadow bg-light rounded">
+            <div className="col-4 px-0">
+              <ChatList
+                user={user}
+                onLogOut={onLogOut}
+                rooms={rooms}
+                currentRoom={currentRoom}
+                dispatch={dispatch}
+              />
+            </div>
+            {/* Chat Box*/}
+            <div className="col-8 px-0 flex-column bg-white rounded-lg">
+              <div className="px-4 py-4" style={{ borderBottom: "1px solid #eee" }}>
+                <h2 className="font-size-15 mb-0">{room ? room.name : "Room"}</h2>
+              </div>
+              <MessageList
+                messageListElement={messageListElement}
+                messages={messages}
+                room={room}
+                onLoadMoreMessages={onLoadMoreMessages}
+                user={user}
+                onUserClicked={onUserClicked}
+                users={users}
+              />
+    
+              {/* Typing area */}
+              <TypingArea
+                message={message}
+                setMessage={setMessage}
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  onMessageSend(message, roomId);
+    
+                  messageListElement.current.scrollTop = messageListElement.current.scrollHeight;
+                }}
+                onFileOpened={(e) => {
+                  e.preventDefault();
+                  const file = e.target.files[0];
+                  
+                  setMessage({ ...message, 'attachment': file })
+                }}
+              />
+            </div>
           </div>
-          <MessageList
-            messageListElement={messageListElement}
-            messages={messages}
-            room={room}
-            onLoadMoreMessages={onLoadMoreMessages}
-            user={user}
-            onUserClicked={onUserClicked}
-            users={users}
-          />
-
-          {/* Typing area */}
-          <TypingArea
-            message={message}
-            setMessage={setMessage}
-            onSubmit={(e) => {
-              e.preventDefault();
-              onMessageSend(message, roomId);
-
-              messageListElement.current.scrollTop = messageListElement.current.scrollHeight;
-            }}
-            onFileOpened={(e) => {
-              e.preventDefault();
-              const file = e.target.files[0];
+        ) : (
+          <div style={{ color: 'white' }}>
+            <h1>Nenhuma sala encontrada</h1>
+          </div>
               
-              setMessage({ ...message, 'attachment': file })
-            }}
-          />
-        </div>
-      </div>
+        )
+      }
+
+     
     </div>
   );
 }
