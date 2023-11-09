@@ -55,7 +55,8 @@ const MessageList = ({
             <></>
           )}
           {messages.map((message, x) => {
-            console.log(message);
+            const { attachment } = message.message;
+            console.log(message, attachment);
             const key = message.message + message.date + message.from + x;
             if (message.from === "info") {
               return <InfoMessage key={key} message={message.message} />;
@@ -66,6 +67,7 @@ const MessageList = ({
                   onUserClicked={() => onUserClicked(message.from)}
                   key={key}
                   message={message.message}
+                  attachment={attachment}
                   date={message.date}
                   user={users[message.from]}
                 />

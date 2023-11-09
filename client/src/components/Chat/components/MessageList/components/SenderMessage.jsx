@@ -7,6 +7,7 @@ import OnlineIndicator from "../../OnlineIndicator";
 const SenderMessage = ({
   user,
   message = "Lorem ipsum dolor...",
+  attachment = "a",
   date,
   onUserClicked,
 }) => (
@@ -32,7 +33,8 @@ const SenderMessage = ({
               <OnlineIndicator width={7} height={7} online={user.online} />
             </div>
           )}
-          <p className="text-left">{message}</p>
+          <p className="text-left">{message.message}</p>
+          <a className="text-left" href="#">{message.attachment}</a>
           <p className="chat-time mb-0">
             <ClockIcon /> {moment.unix(date).format("LT")}{" "}
           </p>

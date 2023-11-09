@@ -46,6 +46,8 @@ const useChatHandlers = (/** @type {import("../../state").UserEntry} */ user) =>
         /** We've got messages but it's possible we might not have the cached user entires which correspond to those messages */
         await populateUsersFromLoadedMessages(state.users, dispatch, messages);
 
+        console.log(messages);
+
         dispatch({
           type: prepend ? "prepend messages" : "set messages",
           payload: { id: roomId, messages: messages },

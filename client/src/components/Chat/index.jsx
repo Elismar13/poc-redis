@@ -60,7 +60,7 @@ export default function Chat({ onLogOut, user, onMessageSend }) {
     
               {/* Typing area */}
               <TypingArea
-                message={message}
+                message={message.message}
                 setMessage={setMessage}
                 onSubmit={(e) => {
                   e.preventDefault();

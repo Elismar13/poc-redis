@@ -24,7 +24,8 @@ const ReceiverMessage = ({
           >
             {username}
           </div>
-          <p className="text-left">{message}</p>
+          <p className="text-left">{message.message}</p>
+          <a className="text-left" href="#">{message.attachment}</a>
           <p className="chat-time mb-0">
             <ClockIcon /> {moment.unix(date).format("LT")}{" "}
           </p>

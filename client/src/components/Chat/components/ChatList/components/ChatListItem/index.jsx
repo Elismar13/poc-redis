@@ -13,6 +13,7 @@ import OnlineIndicator from "../../../OnlineIndicator";
  */
 const ChatListItem = ({ room, active = false, onClick }) => {
   const { online, name, lastMessage, userId } = useChatListItemHandlers(room);
+ 
   return (
     <div
       onClick={onClick}
@@ -29,7 +30,7 @@ const ChatListItem = ({ room, active = false, onClick }) => {
       <div className="media-body overflow-hidden">
         <h5 className="text-truncate font-size-14 mb-1">{name}</h5>
         {lastMessage && (
-          <p className="text-truncate mb-0"> {lastMessage.message} </p>
+          <p className="text-truncate mb-0"> {lastMessage.message.message} </p>
         )}
       </div>
       {lastMessage && (
@@ -66,6 +67,7 @@ const useChatListItemHandlers = (
     }
   }, [id, name, state.users]);
 
+  console.log("Sala", room)
   const lastMessage = useLastMessage(room);
 
   return {
@@ -92,6 +94,7 @@ const useLastMessage = (
             message = messages.pop();
           }
 
+          console.log("Mensagens recebidas: ", messages, "Ultima mensagem: ", message);
           dispatch({
             type: "set last message",
             payload: { id: room.id, lastMessage: message },

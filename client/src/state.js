@@ -5,10 +5,16 @@ import { createContext, useContext, useReducer } from "react";
  * @typedef {{
  *  from: string
  *  date: number
- *  message: string
+ *  message: MessageWithAttachment
  *  roomId?: string
  * }} Message
  *
+* @typedef {{
+*  message: string
+*  attachment: string
+* }} MessageWithAttachment
+*
+ * 
  * @typedef {{
  *   name: string;
  *   id: string;
